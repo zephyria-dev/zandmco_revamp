@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Heart, DollarSign, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ImageLayer3 from './image_layer_3';
 
 const donationService = {
   createDonation: async (data) => {
@@ -51,7 +52,7 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 flex items-center justify-center z-[9999] bg-black/30 backdrop-blur-sm p-3 sm:p-4"
+        className="fixed inset-0 flex items-center justify-center z-[9999] bg-white/30 backdrop-blur-xs p-3 sm:p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -288,6 +289,7 @@ export default function ImageLayer2() {
         onClose={() => setIsModalOpen(false)}
         onDonationComplete={handleDonationComplete}
       />
+      <ImageLayer3/>
     </>
   );
 }
