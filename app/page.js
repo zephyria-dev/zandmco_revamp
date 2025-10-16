@@ -116,9 +116,9 @@ export default function Home() {
       <div className="fade-in-right delay-200">
         <ImageLayer2 />
       </div>
-      <div className="fade-in-scale delay-300">
+      {/* <div className="fade-in-scale delay-300">
         <ImageLayer3/>
-      </div>
+      </div> */}
       <div className="fade-in-rotate delay-400">
         <ImageLayer4 />
       </div>
