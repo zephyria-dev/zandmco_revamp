@@ -210,11 +210,9 @@ export default function ImageLayer2() {
           {/* Mission Statement Card */}
           <div className="bg-[rgb(245,238,235)] rounded-xl sm:rounded-2xl p-6 sm:p-8 flex flex-col justify-center cursor-pointer group transition-all duration-300 hover:shadow-xl hover:scale-105 order-1 md:order-1">
             <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 group-hover:text-gray-900 transition-colors duration-300">
-              Zara founded Z & M Co. in 2023 with a vision to combine her passion for jewelry design with her commitment to social impact. Each piece is carefully crafted by hand, ensuring both beauty and quality.
-            </p>
+            Hi! I’m Zara Skepev!!! I’m on a mission to eliminate brain cancer from our world — one pair of earrings at a time!!! In 2023, at just 8 years old, I founded Z and M Co., a small but mighty initiative dedicated to supporting women, especially mothers, in the field of brain cancer research.            </p>
             <p className="text-gray-700 text-sm sm:text-base leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
-              Our mission extends beyond creating beautiful earrings - we're building a community of conscious consumers who believe in the power of education to transform lives.
-            </p>
+            Every dollar we raise goes directly to backing the incredible female brain cancer researchers at the Quinn Group Brain Cancer Discovery Team at the Australian National University (ANU), through the <b>Zara Skepev Fund for Women in Brain Cancer Research</b></p>
           </div>
 
           {/* Donation Image Card */}
