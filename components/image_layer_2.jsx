@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useLayoutEffect } from 'react';
 import { X, Heart, DollarSign, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ImageLayer3 from './image_layer_3';
+import donationService from '@/services/api_service';
 
-const donationService = {
-  createDonation: async (data) => {
-    return new Promise((resolve) => setTimeout(() => resolve({ success: true }), 1000));
-  },
-  getAllDonations: async () => {
-    return { data: [] };
-  },
-  calculateTotalFromResponse: (response) => {
-    return response?.data?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
-  }
-};
+// const donationService = {
+//   createDonation: async (data) => {
+//     return new Promise((resolve) => setTimeout(() => resolve({ success: true }), 1000));
+//   },
+//   getAllDonations: async () => {
+//     return { data: [] };
+//   },
+//   calculateTotalFromResponse: (response) => {
+//     return response?.data?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
+//   }
+// };
 
 const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,24 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const firstNameInputRef = React.useRef(null);
+  const modalContentRef = React.useRef(null);
+
+  useLayoutEffect(() => {
+  if (isOpen && firstNameInputRef.current) {
+    const timer = setTimeout(() => {
+      const input = firstNameInputRef.current;
+      input.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+      input.focus();
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }
+}, [isOpen]);
+
 
   const handleSubmit = async () => {
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.amount) {
@@ -52,7 +71,7 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 flex items-center justify-center z-[9999] bg-white/30 backdrop-blur-xs p-3 sm:p-4"
+        className="fixed inset-0 flex items-center justify-center z-[9999] bg-white/30 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -63,6 +82,7 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           transition={{ duration: 0.3 }}
+          ref={modalContentRef}
         >
         <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 flex justify-between items-center">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Make a Donation</h2>
@@ -83,10 +103,11 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
               <input
+                ref={firstNameInputRef}
                 type="text"
                 value={formData.firstName}
                 onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent text-zinc-500"
               />
             </div>
             <div>
@@ -95,7 +116,7 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
                 type="text"
                 value={formData.lastName}
                 onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent text-zinc-500"
               />
             </div>
           </div>
@@ -106,7 +127,7 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent text-zinc-500"
             />
           </div>
 
@@ -120,7 +141,7 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
                 step="0.01"
                 value={formData.amount}
                 onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent text-zinc-400"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent text-zinc-500"
               />
             </div>
             <div className="grid grid-cols-2 sm:flex gap-2 mt-2">
@@ -142,7 +163,7 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
               value={formData.message}
               onChange={(e) => setFormData({...formData, message: e.target.value})}
               rows="3"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(239,175,184)] focus:border-transparent text-zinc-500"
               placeholder="Share why you're supporting our cause..."
             />
           </div>
@@ -211,7 +232,7 @@ export default function ImageLayer2() {
           {/* Mission Statement Card */}
           <div className="bg-[rgb(245,238,235)] rounded-xl sm:rounded-2xl p-6 sm:p-8 flex flex-col justify-center cursor-pointer group transition-all duration-300 hover:shadow-xl hover:scale-105 order-1 md:order-1">
             <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 group-hover:text-gray-900 transition-colors duration-300">
-            Hi! I’m Zara Skepev!!! I’m on a mission to eliminate brain cancer from our world — one pair of earrings at a time!!! In 2023, at just 8 years old, I founded Z and M Co., a small but mighty initiative dedicated to supporting women, especially mothers, in the field of brain cancer research.            </p>
+            Hi! I'm Zara Skepev!!! I'm on a mission to eliminate brain cancer from our world — one pair of earrings at a time!!! In 2023, at just 8 years old, I founded Z and M Co., a small but mighty initiative dedicated to supporting women, especially mothers, in the field of brain cancer research.            </p>
             <p className="text-gray-700 text-sm sm:text-base leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
             Every dollar we raise goes directly to backing the incredible female brain cancer researchers at the Quinn Group Brain Cancer Discovery Team at the Australian National University (ANU), through the <b>Zara Skepev Fund for Women in Brain Cancer Research</b></p>
           </div>
