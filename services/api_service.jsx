@@ -38,6 +38,8 @@ export const donationService = {
       }
 
       const data = await response.json();
+      console.log('API status: ', response.status);
+      console.log('API Response:', data);
       return data;
     } catch (error) {
       console.error('Error fetching donations:', error);
