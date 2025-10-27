@@ -47,12 +47,11 @@ export default function DonateModal({ show, onClose }) {
 
                     {/* Raisely Embed */}
                     <div
-                        key="raisely-donate"
-                        id="raisely-donate"
+                        className="raisely-donate"
                         data-campaign-path="zandmco"
                         data-profile=""
                         data-width="100%"
-                        data-height="700"
+                        data-height="800"
                     ></div>
                 </motion.div>
             </motion.div>
