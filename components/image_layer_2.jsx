@@ -1,8 +1,10 @@
 import React, { useState, useEffect , useLayoutEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { X, Heart, DollarSign, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ImageLayer3 from './image_layer_3';
 import donationService from '@/services/api_service';
+import DonatePopup from "./NewButton.jsx";
 
 // const donationService = {
 //   createDonation: async (data) => {
@@ -190,15 +192,13 @@ const DonationModal = ({ isOpen, onClose, onDonationComplete }) => {
 };
 
 export default function ImageLayer2() {
+  const [openDonate, setOpenDonate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [totalDonations, setTotalDonations] = useState(0);
   const [donationCount, setDonationCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const goal = 5000;
-
-  useEffect(() => {
-    loadDonations();
-  }, []);
+  const [showRaiselyEmbed, setShowRaiselyEmbed] = useState(false);
+  const goal = 30000;
 
   const loadDonations = async () => {
     try {
@@ -220,6 +220,13 @@ export default function ImageLayer2() {
     const newCount = donationCount + 1;
     setTotalDonations(newTotal);
     setDonationCount(newCount);
+  };
+
+  const loadRaiselyScript = () => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.raisely.com/v3/public/embed.js';
+    script.async = true;
+    document.head.appendChild(script);
   };
 
   const percentage = Math.min((totalDonations / goal) * 100, 100);
@@ -247,7 +254,7 @@ export default function ImageLayer2() {
             <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:top-1/2 sm:right-2 sm:left-auto sm:translate-x-0 flex justify-center sm:justify-end items-center w-full sm:w-auto px-4 sm:px-0">
               <button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setOpenDonate(true)}
                 className="bg-[rgb(239,175,184)] backdrop-blur-sm py-3 px-6 sm:py-4 sm:px-8 opacity-90 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 cursor-pointer rounded-sm"
               >
                 <p className="text-white text-base sm:text-lg md:text-base font-bold tracking-wide uppercase">
@@ -308,7 +315,14 @@ export default function ImageLayer2() {
         onClose={() => setIsModalOpen(false)}
         onDonationComplete={handleDonationComplete}
       />
+      
       <ImageLayer3/>
+      
+      {/* Render DonatePopup at document body level to avoid container constraints */}
+      {openDonate && ReactDOM.createPortal(
+        <DonatePopup open={openDonate} onClose={() => setOpenDonate(false)} />,
+        document.body
+      )}
     </>
   );
 }
