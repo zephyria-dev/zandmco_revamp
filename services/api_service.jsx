@@ -1,13 +1,9 @@
 const API_BASE_URL = 'https://api.raisely.com/v3';
 
 const getApiKey = () => {
-  const key = process.env.NEXT_PUBLIC_API_KEY;
-  
-  if (!key) {
-    console.error('API Key is missing! Check your .env.local file');
-    console.error('Make sure the variable starts with NEXT_PUBLIC_');
-  }
-  
+  // Hardcoded API key - no more env file nonsense
+  const key = 'raisely-sk-677c5e171cb7a5bed5a8538a1d00ebbf';
+  console.log('Using hardcoded API key:', key.substring(0, 10) + '...');
   return key;
 };
 
@@ -94,9 +90,14 @@ export const donationService = {
       const apiKey = getApiKey();
       
       if (!apiKey) {
+        console.error('API key is missing!');
         throw new Error('API key not configured');
       }
 
+      console.log('Making API request to:', `${API_BASE_URL}/campaigns/${campaignUuid}/donations`);
+      console.log('Using API key:', apiKey.substring(0, 10) + '...');
+
+      // Get donations for the specific campaign UUID
       const response = await fetch(`${API_BASE_URL}/campaigns/${campaignUuid}/donations`, {
         method: 'GET',
         headers: {
@@ -105,6 +106,9 @@ export const donationService = {
         }
       });
 
+      console.log('API Response status:', response.status);
+      console.log('API Response headers:', response.headers);
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('API Response:', errorText);
@@ -112,10 +116,14 @@ export const donationService = {
       }
 
       const data = await response.json();
+      console.log('API Response data:', data);
       
       const total = data.data.reduce((sum, donation) => {
         return sum + (donation.amount / 100);
       }, 0);
+
+      console.log('Calculated total:', total);
+      console.log('Donation count:', data.data.length);
 
       return {
         total,
