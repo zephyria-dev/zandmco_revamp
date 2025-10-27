@@ -1,19 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function DonateModal({ show, onClose }) {
-    // Load Raisely script dynamically (once per open)
+    const embedRef = useRef(null);
+
+    // Load Raisely script and initialize embed
     useEffect(() => {
         if (show) {
-            const script = document.createElement("script");
-            script.src = "https://cdn.raisely.com/v3/public/embed.js";
-            script.async = true;
-            document.body.appendChild(script);
+            // Check if script already exists
+            let script = document.querySelector('script[src="https://cdn.raisely.com/v3/public/embed.js"]');
+            
+            if (!script) {
+                script = document.createElement("script");
+                script.src = "https://cdn.raisely.com/v3/public/embed.js";
+                script.async = true;
+                document.head.appendChild(script);
+            }
+
+            // Wait for script to load and then initialize
+            const initializeEmbed = () => {
+                if (window.Raisely && embedRef.current) {
+                    // Force re-initialization of Raisely embeds
+                    window.Raisely.init();
+                }
+            };
+
+            // Add a small delay to ensure DOM is ready
+            const delayedInit = () => {
+                setTimeout(() => {
+                    initializeEmbed();
+                }, 100);
+            };
+
+            if (script.complete) {
+                delayedInit();
+            } else {
+                script.onload = delayedInit;
+            }
 
             return () => {
-                // Clean up script when modal closes to avoid conflicts
-                document.body.removeChild(script);
+                // Don't remove script on cleanup to avoid reloading issues
             };
         }
     }, [show]);
@@ -47,6 +74,7 @@ export default function DonateModal({ show, onClose }) {
 
                     {/* Raisely Embed */}
                     <div
+                        ref={embedRef}
                         className="raisely-donate"
                         data-campaign-path="zandmco"
                         data-profile=""
