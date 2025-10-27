@@ -288,14 +288,14 @@ export default function ImageLayer2() {
             <div className="mb-4 sm:mb-6 group-hover:translate-x-1 transition-transform duration-300">
               <h3 className="text-gray-900 text-xl sm:text-2xl font-bold mb-1 sm:mb-2">2023</h3>
               <p className="text-gray-700 text-sm sm:text-base group-hover:text-gray-900 transition-colors duration-300">
-                Raised $2,500 for women's education scholarships
+                Raised $14,500 to support Dr. Olga Zaytseva and her research on brain cancer with the Quinn Group Brain Cancer Discovery Team at the Australian National University (ANU).
               </p>
             </div>
 
             <div className="group-hover:translate-x-1 transition-transform duration-300">
               <h3 className="text-gray-900 text-xl sm:text-2xl font-bold mb-1 sm:mb-2">2024</h3>
               <p className="text-gray-700 text-sm sm:text-base group-hover:text-gray-900 transition-colors duration-300">
-                Goal: $5,000 for educational programs
+                Raised $30,000 to support Dr. Olga Zaytseva and Dr. Nan Hee Kim and their research on brain cancer with the Quinn Group Brain Cancer Discovery Team at the Australian National University (ANU).
               </p>
             </div>
           </div>
